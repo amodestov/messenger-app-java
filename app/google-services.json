@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "497843412230",
+    "project_id": "messenger-4cf05",
+    "storage_bucket": "messenger-4cf05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:497843412230:android:aed9326669b8d4dec7d287",
+        "android_client_info": {
+          "package_name": "com.aleksandrmodestov.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAntryQYdkEZL3yj4sM-U7hOr6sQLHHiBc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
