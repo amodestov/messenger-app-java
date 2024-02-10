@@ -25,7 +25,7 @@ public class UsersViewModel extends ViewModel {
     private MutableLiveData<List<User>> users = new MutableLiveData<>();
     private FirebaseAuth auth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference userReference;
+    private DatabaseReference referenceUsers;
 
     public LiveData<FirebaseUser> getUser() {
         return user;
@@ -34,7 +34,7 @@ public class UsersViewModel extends ViewModel {
     public UsersViewModel() {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        userReference = firebaseDatabase.getReference("Users");
+        referenceUsers = firebaseDatabase.getReference("Users");
         auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -43,13 +43,22 @@ public class UsersViewModel extends ViewModel {
                 }
             }
         });
-        userReference.addValueEventListener(new ValueEventListener() {
+        referenceUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser == null) {
+                    return;
+                }
                 List<User> usersList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     User user = dataSnapshot.getValue(User.class);
-                    usersList.add(user);
+                    if (user == null) {
+                        return;
+                    }
+                    if (!user.getId().equals(currentUser.getUid())) {
+                        usersList.add(user);
+                    }
                     Log.d(TAG, user.toString());
                 }
                 users.setValue(usersList);
@@ -67,6 +76,19 @@ public class UsersViewModel extends ViewModel {
     }
 
     public void signOut() {
+        setUserOnLine(false);
         auth.signOut();
+    }
+
+    public void setUserOnLine(boolean isOnline) {
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+        if (firebaseUser == null) {
+            return;
+        }
+        Log.d(TAG, firebaseUser.getUid());
+        referenceUsers
+                .child(firebaseUser.getUid())
+                .child("online")
+                .setValue(isOnline);
     }
 }

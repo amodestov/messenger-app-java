@@ -18,11 +18,16 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
     public static final String USER_INFO_PATTERN = "%s %s, %s";
 
     private List<User> users = new ArrayList<>();
+
     private OnUserClickListener onUserClickListener;
 
     public void setUsers(List<User> users) {
         this.users = users;
         notifyDataSetChanged();
+    }
+
+    public void setOnUserClickListener(OnUserClickListener onUserClickListener) {
+        this.onUserClickListener = onUserClickListener;
     }
 
     @NonNull
